@@ -1,557 +1,220 @@
-ML-Based Adaptive PI Gain Tuning Framework
 
-📌 Overview
 
+\# ML-Based Adaptive PI Gain Tuning Framework
 
 
-This project presents a data-driven PI controller tuning framework that integrates control theory, numerical optimization, and machine learning.
 
+\## 📌 Overview
 
 
-Traditional PI tuning methods (e.g., Ziegler–Nichols, manual tuning, brute-force search) are computationally expensive and difficult to scale across dynamically varying plant parameters.
 
+Traditional PI tuning methods (Ziegler–Nichols, manual tuning, or brute-force search) are often computationally expensive and struggle to scale when plant parameters vary dynamically.
 
 
-This project proposes a supervised regression approach to predict optimal PI gains directly from plant dynamics.
 
+This project proposes a \*\*supervised regression approach\*\* to predict optimal Proportional () and Integral () gains directly from plant dynamics, replacing iterative tuning with real-time inference.
 
 
-🎯 Objective
 
+---
 
 
-Given a second-order plant:
 
+\## 🎯 Objective
 
 
-𝐺
 
-(
+Given a second-order plant defined as:
 
-𝑠
 
-)
 
-=
+The framework predicts the optimal:
 
-1
 
-𝑠
 
-2
+\* \*\*Proportional gain\*\* ()
 
-\+
+\* \*\*Integral gain\*\* ()
 
-𝑎
 
-𝑠
 
-\+
+---
 
-𝑏
 
-G(s)=
 
-s
+\## 🧠 Mathematical Foundation
 
-2
 
-+as+b
 
-1
+The plant denominator  is mapped to the standard second-order form:
 
-&nbsp;	​
 
 
+Where the natural frequency () and damping ratio () are:
 
 
 
-Predict optimal:
+\* 
 
+\* 
 
 
-Proportional gain 
 
-𝐾
+\### Optimization Objective
 
-𝑝
 
-K
 
-p
+To determine the "True Optimal" gains for the training set, we minimize the cost function :
 
-&nbsp;	​
 
 
+\*\*Metrics included:\*\*
 
 
 
-Integral gain 
+\* : Settling Time
 
-𝐾
+\* : Percentage Overshoot
 
-𝑖
+\* : Integral of Squared Error
 
-K
 
-i
 
-&nbsp;	​
+---
 
 
 
+\## ⚙️ Methodology
 
 
-Using machine learning instead of repeated brute-force tuning.
 
+\### 1. Dataset Generation
 
 
-🧠 Mathematical Foundation
 
+\* Generated ~200 unique second-order plants by varying .
 
+\* Performed a grid-search optimization to find the  pair that minimizes  for each plant.
 
-The plant denominator:
+\* \*\*Result:\*\* A supervised dataset mapping .
 
 
 
-𝑠
+\### 2. ML Models Evaluated
 
-2
 
-\+
 
-𝑎
+The following regressors were benchmarked to find the best mapping:
 
-𝑠
 
-\+
 
-𝑏
+\* \*\*Random Forest Regressor\*\* (Ensemble)
 
-s
+\* \*\*Neural Network\*\* (MLPRegressor)
 
-2
+\* \*\*XGBoost Regressor\*\* (Gradient Boosting)
 
-+as+b
 
 
+---
 
-is compared to standard second-order form:
 
 
+\## 📊 Results
 
-𝑠
 
-2
 
-\+
+The \*\*XGBoost Regressor\*\* emerged as the top performer, achieving an  score between \*\*0.86 – 0.92\*\*.
 
-2
 
-𝜁
 
-𝜔
+\### Closed-loop Validation (Unseen Plant)
 
-𝑛
 
-𝑠
 
-\+
+| Metric | True Optimal | ML Predicted |
 
-𝜔
+| --- | --- | --- |
 
-𝑛
+| \*\*Settling Time\*\* | 3.07 s | 2.32 s |
 
-2
+| \*\*Overshoot\*\* | 0% | 0.7% |
 
-s
+| \*\*ISE\*\* | 0.749 | 0.741 |
 
-2
 
-+2ζω
 
-n
+> \*\*Note:\*\* The ML-predicted controller achieved comparable (and in some cases, faster) performance with negligible overshoot compared to the computationally expensive brute-force method.
 
-&nbsp;	​
 
 
+---
 
-s+ω
 
-n
 
-2
+\## 🚀 Key Contributions
 
-&nbsp;	​
 
 
+\* \*\*Hybrid Approach:\*\* Seamlessly integrates Control Theory with Machine Learning.
 
+\* \*\*Automation:\*\* Built a full pipeline from plant generation to model validation.
 
+\* \*\*Efficiency:\*\* Reduced gain-tuning time from minutes (optimization-based) to milliseconds (inference-based).
 
-Where:
 
 
+---
 
-𝜔
 
-𝑛
 
-=
+\## 🛠 Tech Stack
 
-𝑏
 
-ω
 
-n
+\* \*\*Scientific Computing:\*\* `NumPy`, `SciPy`
 
-&nbsp;	​
+\* \*\*Control Systems:\*\* `python-control`
 
+\* \*\*Machine Learning:\*\* `scikit-learn`, `XGBoost`
 
+\* \*\*Visualization:\*\* `Matplotlib`, `Seaborn`
 
-=
 
-b
 
-&nbsp;	​
+---
 
 
 
+\## 🔮 Future Work
 
 
-𝜁
 
-=
+\* \[ ] Implement \*\*Bayesian Optimization\*\* for faster hyperparameter tuning.
 
-𝑎
+\* \[ ] Extend the framework to \*\*Full PID Tuning\*\* ( included).
 
-2
+\* \[ ] Introduce \*\*Disturbance \& Noise\*\* modeling for robustness testing.
 
-𝑏
+\* \[ ] Explore \*\*Reinforcement Learning (RL)\*\* for real-time adaptive control in non-linear environments.
 
-ζ=
 
-2
 
-b
+---
 
-&nbsp;	​
 
 
+\*\*Author:\*\* \[Vansh Dev](https://github.com/YourUsername)
 
-a
 
-&nbsp;	​
 
+\*Data Science \& Control Systems Enthusiast\*
 
 
 
+---
 
-Classical control performance indices were incorporated:
 
 
+Would you like me to help you write a \*\*Quick Start\*\* code snippet for the `usage` section of this README?
 
-Settling Time (Ts)
-
-
-
-Overshoot (OS)
-
-
-
-Integral of Squared Error (ISE)
-
-
-
-Optimization objective:
-
-
-
-𝐽
-
-(
-
-𝐾
-
-𝑝
-
-,
-
-𝐾
-
-𝑖
-
-)
-
-=
-
-0.5
-
-𝑇
-
-𝑠
-
-\+
-
-5
-
-𝑂
-
-𝑆
-
-\+
-
-0.01
-
-𝐼
-
-𝑆
-
-𝐸
-
-J(K
-
-p
-
-&nbsp;	​
-
-
-
-,K
-
-i
-
-&nbsp;	​
-
-
-
-)=0.5T
-
-s
-
-&nbsp;	​
-
-
-
-+5OS+0.01ISE
-
-⚙️ Methodology
-
-1️⃣ Dataset Generation
-
-
-
-Generated ~200 second-order plants
-
-
-
-Performed grid-search gain optimization for each plant
-
-
-
-Created supervised dataset:
-
-
-
-(
-
-𝑎
-
-,
-
-𝑏
-
-)
-
-→
-
-(
-
-𝐾
-
-𝑝
-
-,
-
-𝐾
-
-𝑖
-
-)
-
-(a,b)→(K
-
-p
-
-&nbsp;	​
-
-
-
-,K
-
-i
-
-&nbsp;	​
-
-
-
-)
-
-2️⃣ Machine Learning Models Evaluated
-
-
-
-Random Forest Regressor
-
-
-
-Neural Network (MLPRegressor)
-
-
-
-XGBoost Regressor
-
-
-
-📊 Results
-
-
-
-Best performing model: XGBoost
-
-
-
-R² ≈ 0.86–0.92 (depending on cost formulation)
-
-
-
-Low MAE
-
-
-
-Stable predictions across unseen plants
-
-
-
-Closed-loop Validation
-
-
-
-For unseen plant:
-
-
-
-Metric	True Optimal	ML Predicted
-
-Settling Time	3.07 s	2.32 s
-
-Overshoot	0%	0.7%
-
-ISE	0.749	0.741
-
-
-
-The ML-predicted controller achieved comparable or improved integrated error performance with minimal overshoot.
-
-
-
-📈 Model Diagnostics
-
-
-
-Residual analysis shows unbiased prediction
-
-
-
-Feature importance indicates plant stiffness parameter (b) significantly influences gain tuning
-
-
-
-Ensemble models outperform physically transformed feature sets
-
-
-
-🚀 Key Contributions
-
-
-
-Integrated control theory and ML regression
-
-
-
-Automated dataset generation pipeline
-
-
-
-Multi-model comparison framework
-
-
-
-Closed-loop validation on unseen plants
-
-
-
-Realistic performance cost formulation
-
-
-
-🔮 Future Work
-
-
-
-Hyperparameter tuning via Bayesian Optimization
-
-
-
-Extend framework to full PID tuning
-
-
-
-Incorporate disturbance/noise modeling
-
-
-
-Explore reinforcement learning-based adaptive control
-
-
-
-🛠 Tech Stack
-
-
-
-Python
-
-
-
-NumPy
-
-
-
-SciPy
-
-
-
-python-control
-
-
-
-scikit-learn
-
-
-
-XGBoost
-
-
-
-Matplotlib
-
-
-
-👤 Author
-
-
-
-Vansh Dev
-
-Data Science \& Control Systems Enthusiast
-
-"# ML-Based-Adaptive-PI-Gain-Tuning-Framework" 
